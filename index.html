@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crystals Collector Game</title>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+	body {
+		background-color: #fff;
+		}
+	#row0 {
+		margin-top:15px;
+		}		
+	#titletext span {
+		color: #fff;
+		background-color: rgba(0,0,0,0.8);
+		padding:15px;
+		border-radius: 25px;
+		}
+	#row1 {
+		margin-top:10px;
+		}			
+	#row1 span {
+		color: red;
+		background-color: rgba(0,0,0,0.8);
+		padding:12px;
+		border-radius: 12px;
+		}
+	#row2 {
+		margin-top:15px;
+		}
+	.word-focus {
+		border: 1px solid #000;
+		width: 400px;
+		margin: auto;
+		border-radius: 12px;
+		background-color: #f5f5f5;
+		}
+	#row4 h4 {
+		color: red;
+		}
+	.guessed-focus {
+		border: 1px solid #000;
+		width: 400px;
+		margin: auto;
+		border-radius: 12px;
+		background-color: #f5f5f5;
+		}	
+	.instructions p {
+		font-size: 15px;
+		}
+	.number-match, .number-count {
+		float:left;
+		width: 320px;
+		margin-right:10px;
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+		text-align: center;
+		}
+	.win-loss-count {
+		float:left;
+		width: 180px;
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+		padding: 16px 20px 14px 20px;
+		font-size: 15px;
+		}	
+	.win-loss-count div:nth-child(2) {
+		margin-top:8px;
+		}
+	.gems {
+		width:200px;
+		height: 200px;
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+		float:left;
+		margin-right:10px;
+		text-align: center;
+		}	
+	.gems img {
+		width: 198px;
+		height: 198px;
+		}
+	.clear {
+		clear: both;
+		}
+	.gem-buffer {
+		float:left;
+		margin-top:20px;
+		margin-bottom:20px;
+		font-size: 22px;
+		border-bottom: 2px dotted #ccc;
+		text-align: center;
+		}
+	#winword {
+		font-weight: bold;
+		color: red; 
+		border-bottom: 1px solid red;
+		}
+
+  </style>
+</head>
+
+<body>
+
+
+	<div class="container">
+		<div class="row" id="row0">
+			<div class="col-md-12 text-center">
+				<h1 id="titletext"><span>Crystals Collector!</span></h1>
+			</div>			
+		</div>
+	</div>
+	<div class="container" id="maincontent">
+		<div class="row">
+			<div class="row" id="row1">
+				<div class="col-md-12 text-center">
+					<div class="instructions">
+						<p>You will be given a random number at the start of the game.</p>
+						<p>There are four crystals below. By clicking on a crystal you will add a specific amount of points to your total score.</p>
+						<p>You win the game by matching your total score to the random number presented. You loose the game if your total score goes above the random number.</p>
+						<p>The value of each crystal is hidden from you until you click on it.</p>
+						<p>Each time when the game starts, the game will change the values of each crystal.</p>
+					</div>
+				</div>
+			</div>
+			<div class="row" id="row2">
+				<div class="col-md-12 text-center">
+					<div class="number-match"><h3>Number to Match</h3><h3><span id="number-to-match">120</span></h3></div>
+					<div class="number-count"><h3>Your Current Total</h3><h3><span id="players-number">99</span></h3></div>
+					<div class="win-loss-count">  
+
+						<div><span id="winword">YOU TIED!</span></div>
+						<div><span id="wins">Wins: zero</span></div>
+						<div><span id="losses">Losses: zero</span></div>
+
+					</div>
+					<br class="clear" />
+					<div class="gem-buffer">Click on a Gem Below!</div>
+					<br class="clear" />
+					<div class="gems"><img src="assets/images/gem1.png" id="gem1" /></div>
+					<div class="gems"><img src="assets/images/gem2.png" id="gem2" /></div>
+					<div class="gems"><img src="assets/images/gem3.png" id="gem3" /></div>
+					<div class="gems"><img src="assets/images/gem4.png" id="gem4" /></div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	
+	// Set zero variables for wins and losses
+	var wins = 0;
+	var losses = 0;
+
+	// Display initial HTML of zero values for wins and losses
+	document.querySelector("#wins").innerHTML = ("Wins: " + wins);
+	document.querySelector("#losses").innerHTML = ("Losses: " + losses);
+
+
+	// Create a function to reset the game
+	function gameReset() {
+		
+		// Set a new random number between 19 and 120
+		// x = 19 and y = 120  
+		// Math.floor(Math.random() * ((y-x)+1) + x);
+		var randomNum = Math.floor(Math.random() * 102 + 19);
+		$('#number-to-match').html(randomNum);
+
+		console.log ("---------- set random number to beat --------------")
+		console.log (randomNum);
+
+		// each gem resets and gets a new value between 1 and 12
+		// x = 1 and y = 12  
+		// Math.floor(Math.random() * ((y-x)+1) + x);
+		var gem1 = Math.floor(Math.random() * 12 + 1);
+		var gem2 = Math.floor(Math.random() * 12 + 1);
+		var gem3 = Math.floor(Math.random() * 12 + 1);
+		var gem4 = Math.floor(Math.random() * 12 + 1);
+
+		$('#gem1').html(gem1);
+		$('#gem2').html(gem2);
+		$('#gem3').html(gem3);
+		$('#gem4').html(gem4);
+
+		console.log ("---------- set gems --------------")
+		console.log (gem1);
+		console.log (gem2);
+		console.log (gem3);
+		console.log (gem4);
+	};
+
+
+	// Get number selection from player
+    $("#gem1").on("click", function() {
+
+
+
+		// Create a variable to start adding up the user's selected amounts
+		var userReductionTotal;
+
+
+		// clicking on a gem places the random gem amount into the "total score" box
+
+
+
+
+
+	// Run function to check if user wins or loses
+	checkWinLoseConditions();
+
+    }); // **** END onclick function ****
+
+
+
+	// Win/Loss Logic
+	// Create a function to check if two arrays are equal, used to check win condition
+	function arraysEqual(a, b) {
+
+	  if (a === b) return 0;
+	  if (a == null || b == null) return false;
+	  if (a.length != b.length) return false;
+
+	  // If you don't care about the order of the elements inside
+	  // the array, you should sort both arrays here.
+
+	  for (var i = 0; i < a.length; ++i) {
+	    if (a[i] !== b[i]) return false;
+	  }
+	  return true;
+	}
+
+
+
+	function checkWinLoseConditions() {
+
+	// If subtracted numbers equals zero then add 1 to win count and restart game
+		if (arraysEqual(userReductionTotal) === 0) {
+			wins = wins + 1;
+			document.querySelector("#wins").innerHTML = ("Wins: " + wins);
+			document.querySelector("#winword").innerHTML = ("You win!");
+			gameReset();
+		}
+	// If subtracted numbers is less than zero then add 1 to the losses count and restart game
+		else if (userReductionTotal < 0) {
+			losses = losses + 1;
+			document.querySelector("#losses").innerHTML = ("Losses: " + losses);
+			document.querySelector("#winword").innerHTML = ("You lost!");
+			gameReset();
+		}
+		else {
+			return
+		}
+	}
+
+
+
+
+</script>
+</body>
+</html>
